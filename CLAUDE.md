@@ -86,7 +86,7 @@ Real-time display of what each Claude Code agent is doing (e.g., "Reading App.ts
 
 ### Key lessons learned
 
-- **Previous failed approach**: Hook-based file IPC (documented in `.claude/agent-status-attempt.md`). Hooks are captured at session startup, terminal env vars don't propagate to hook subprocesses. Transcript watching is much simpler.
+- **Previous failed approach**: Hook-based file IPC. Hooks are captured at session startup, terminal env vars don't propagate to hook subprocesses. Transcript watching is much simpler.
 - **`fs.watch` is unreliable on Windows**: Sometimes misses events. Always pair with polling as a backup.
 - **Partial line buffering is essential**: When reading an append-only file, the last line may be incomplete (mid-write). Only process lines terminated by `\n`; carry the remainder to the next read.
 - **Flickering / instant completion**: For fast tools (~1s like Read), `tool_use` and `tool_result` arrive in the same `readNewLines` batch. Without a delay, React batches both state updates into a single render and the user never sees the blue active state. Fixed by delaying `agentToolDone` messages by 300ms.
