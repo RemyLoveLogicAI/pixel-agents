@@ -117,7 +117,7 @@ pollingTimers        — agentId → setInterval (2s backup file polling)
 waitingTimers        — agentId → setTimeout (2s debounce for "waiting" status)
 ```
 
-No persistence (`workspaceState`) is used. No adopted terminals. Agents only exist for terminals launched from the extension.
+**Persistence**: Agent-to-terminal mappings are persisted to `workspaceState` (key `'arcadia.agents'`) as `PersistedAgent[]`. On webview ready, `restoreAgents()` reads persisted state, matches each entry to a live terminal by name, and recreates the `AgentState`. File watching resumes from end-of-file (no replay). Entries whose terminals no longer exist are pruned. `nextAgentId` and `nextTerminalIndex` are advanced past restored values to avoid collisions.
 
 ## Memory
 

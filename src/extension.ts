@@ -15,6 +15,13 @@ interface AgentState {
 	isWaiting: boolean;
 }
 
+interface PersistedAgent {
+	id: number;
+	terminalName: string;
+	jsonlFile: string;
+	projectDir: string;
+}
+
 class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 	private nextAgentId = 1;
 	private nextTerminalIndex = 1;
@@ -57,6 +64,7 @@ class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 					agent.terminalRef.dispose();
 				}
 			} else if (message.type === 'webviewReady') {
+				this.restoreAgents();
 				this.sendExistingAgents();
 			} else if (message.type === 'openSessionsFolder') {
 				const projectDir = this.getProjectDirPath();
@@ -129,6 +137,7 @@ class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 
 		this.agents.set(id, agent);
 		this.activeAgentId = id;
+		this.persistAgents();
 		console.log(`[Arcadia] Agent ${id}: created for terminal ${terminal.name}`);
 		this.webviewView?.webview.postMessage({ type: 'agentCreated', id });
 
@@ -204,6 +213,7 @@ class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 		agent.jsonlFile = newFilePath;
 		agent.fileOffset = 0;
 		agent.lineBuffer = '';
+		this.persistAgents();
 
 		// Start watching new file
 		this.startFileWatching(agentId, newFilePath);
@@ -250,6 +260,101 @@ class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 
 		// Remove from maps
 		this.agents.delete(agentId);
+		this.persistAgents();
+	}
+
+	private persistAgents() {
+		const persisted: PersistedAgent[] = [];
+		for (const agent of this.agents.values()) {
+			persisted.push({
+				id: agent.id,
+				terminalName: agent.terminalRef.name,
+				jsonlFile: agent.jsonlFile,
+				projectDir: agent.projectDir,
+			});
+		}
+		this.context.workspaceState.update('arcadia.agents', persisted);
+	}
+
+	private restoreAgents() {
+		const persisted = this.context.workspaceState.get<PersistedAgent[]>('arcadia.agents', []);
+		if (persisted.length === 0) { return; }
+
+		const liveTerminals = vscode.window.terminals;
+		let maxId = 0;
+		let maxIdx = 0;
+		let restoredProjectDir: string | null = null;
+
+		for (const p of persisted) {
+			const terminal = liveTerminals.find(t => t.name === p.terminalName);
+			if (!terminal) { continue; }
+
+			const agent: AgentState = {
+				id: p.id,
+				terminalRef: terminal,
+				projectDir: p.projectDir,
+				jsonlFile: p.jsonlFile,
+				fileOffset: 0,
+				lineBuffer: '',
+				activeToolIds: new Set(),
+				activeToolStatuses: new Map(),
+				isWaiting: false,
+			};
+
+			this.agents.set(p.id, agent);
+			this.knownJsonlFiles.add(p.jsonlFile);
+			console.log(`[Arcadia] Restored agent ${p.id} → terminal "${p.terminalName}"`);
+
+			if (p.id > maxId) { maxId = p.id; }
+			// Extract terminal index from name like "Claude Code #3"
+			const match = p.terminalName.match(/#(\d+)$/);
+			if (match) {
+				const idx = parseInt(match[1], 10);
+				if (idx > maxIdx) { maxIdx = idx; }
+			}
+
+			restoredProjectDir = p.projectDir;
+
+			// Start file watching if JSONL exists, skipping to end of file
+			try {
+				if (fs.existsSync(p.jsonlFile)) {
+					const stat = fs.statSync(p.jsonlFile);
+					agent.fileOffset = stat.size;
+					this.startFileWatching(p.id, p.jsonlFile);
+				} else {
+					// Poll for the file to appear
+					const pollTimer = setInterval(() => {
+						try {
+							if (fs.existsSync(agent.jsonlFile)) {
+								console.log(`[Arcadia] Restored agent ${p.id}: found JSONL file`);
+								clearInterval(pollTimer);
+								this.jsonlPollTimers.delete(p.id);
+								const stat = fs.statSync(agent.jsonlFile);
+								agent.fileOffset = stat.size;
+								this.startFileWatching(p.id, agent.jsonlFile);
+							}
+						} catch { /* file may not exist yet */ }
+					}, 1000);
+					this.jsonlPollTimers.set(p.id, pollTimer);
+				}
+			} catch { /* ignore errors during restore */ }
+		}
+
+		// Advance counters past restored IDs
+		if (maxId >= this.nextAgentId) {
+			this.nextAgentId = maxId + 1;
+		}
+		if (maxIdx >= this.nextTerminalIndex) {
+			this.nextTerminalIndex = maxIdx + 1;
+		}
+
+		// Re-persist cleaned-up list (removes entries whose terminals are gone)
+		this.persistAgents();
+
+		// Start project scan for /clear detection
+		if (restoredProjectDir) {
+			this.ensureProjectScan(restoredProjectDir);
+		}
 	}
 
 	private sendExistingAgents() {
