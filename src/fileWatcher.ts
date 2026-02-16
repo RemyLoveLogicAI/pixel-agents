@@ -191,6 +191,7 @@ function adoptTerminalForFile(
 		activeToolStatuses: new Map(),
 		activeToolNames: new Map(),
 		activeSubagentToolIds: new Map(),
+		activeSubagentToolNames: new Map(),
 		isWaiting: false,
 		permissionSent: false,
 	};

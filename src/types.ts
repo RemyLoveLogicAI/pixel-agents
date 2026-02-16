@@ -11,6 +11,7 @@ export interface AgentState {
 	activeToolStatuses: Map<string, string>;
 	activeToolNames: Map<string, string>;
 	activeSubagentToolIds: Map<string, Set<string>>; // parentToolId → active sub-tool IDs
+	activeSubagentToolNames: Map<string, Map<string, string>>; // parentToolId → (subToolId → toolName)
 	isWaiting: boolean;
 	permissionSent: boolean;
 }

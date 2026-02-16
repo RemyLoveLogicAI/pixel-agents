@@ -226,6 +226,14 @@ export function useExtensionMessages(
           }
         })
         os.showPermissionBubble(id)
+      } else if (msg.type === 'subagentToolPermission') {
+        const id = msg.id as number
+        const parentToolId = msg.parentToolId as string
+        // Show permission bubble on the sub-agent character
+        const subId = os.getSubagentId(id, parentToolId)
+        if (subId !== null) {
+          os.showPermissionBubble(subId)
+        }
       } else if (msg.type === 'agentToolPermissionClear') {
         const id = msg.id as number
         setAgentTools((prev) => {
@@ -239,6 +247,12 @@ export function useExtensionMessages(
           }
         })
         os.clearPermissionBubble(id)
+        // Also clear permission bubbles on all sub-agent characters of this parent
+        for (const [subId, meta] of os.subagentMeta) {
+          if (meta.parentAgentId === id) {
+            os.clearPermissionBubble(subId)
+          }
+        }
       } else if (msg.type === 'subagentToolStart') {
         const id = msg.id as number
         const parentToolId = msg.parentToolId as string

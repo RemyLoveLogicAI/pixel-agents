@@ -62,6 +62,7 @@ export function launchNewTerminal(
 		activeToolStatuses: new Map(),
 		activeToolNames: new Map(),
 		activeSubagentToolIds: new Map(),
+		activeSubagentToolNames: new Map(),
 		isWaiting: false,
 		permissionSent: false,
 	};
@@ -182,6 +183,7 @@ export function restoreAgents(
 			activeToolStatuses: new Map(),
 			activeToolNames: new Map(),
 			activeSubagentToolIds: new Map(),
+			activeSubagentToolNames: new Map(),
 			isWaiting: false,
 			permissionSent: false,
 		};

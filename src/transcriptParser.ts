@@ -88,7 +88,7 @@ export function processTranscriptLine(
 				}
 			}
 		} else if (record.type === 'progress') {
-			processProgressRecord(agentId, record, agents, webview);
+			processProgressRecord(agentId, record, agents, waitingTimers, permissionTimers, webview);
 		} else if (record.type === 'user') {
 			const content = record.message?.content;
 			if (Array.isArray(content)) {
@@ -102,6 +102,7 @@ export function processTranscriptLine(
 							// If the completed tool was a Task, clear its subagent tools
 							if (agent.activeToolNames.get(completedToolId) === 'Task') {
 								agent.activeSubagentToolIds.delete(completedToolId);
+								agent.activeSubagentToolNames.delete(completedToolId);
 								webview?.postMessage({
 									type: 'subagentClear',
 									id: agentId,
@@ -147,6 +148,8 @@ function processProgressRecord(
 	agentId: number,
 	record: Record<string, unknown>,
 	agents: Map<number, AgentState>,
+	waitingTimers: Map<number, ReturnType<typeof setTimeout>>,
+	permissionTimers: Map<number, ReturnType<typeof setTimeout>>,
 	webview: vscode.Webview | undefined,
 ): void {
 	const agent = agents.get(agentId);
@@ -168,19 +171,32 @@ function processProgressRecord(
 	if (!Array.isArray(content)) return;
 
 	if (msgType === 'assistant') {
+		let hasNonExemptSubTool = false;
 		for (const block of content) {
 			if (block.type === 'tool_use' && block.id) {
 				const toolName = block.name || '';
 				const status = formatToolStatus(toolName, block.input || {});
 				console.log(`[Arcadia] Agent ${agentId} subagent tool start: ${block.id} ${status} (parent: ${parentToolId})`);
 
-				// Track sub-tool
+				// Track sub-tool IDs
 				let subTools = agent.activeSubagentToolIds.get(parentToolId);
 				if (!subTools) {
 					subTools = new Set();
 					agent.activeSubagentToolIds.set(parentToolId, subTools);
 				}
 				subTools.add(block.id);
+
+				// Track sub-tool names (for permission checking)
+				let subNames = agent.activeSubagentToolNames.get(parentToolId);
+				if (!subNames) {
+					subNames = new Map();
+					agent.activeSubagentToolNames.set(parentToolId, subNames);
+				}
+				subNames.set(block.id, toolName);
+
+				if (!PERMISSION_EXEMPT_TOOLS.has(toolName)) {
+					hasNonExemptSubTool = true;
+				}
 
 				webview?.postMessage({
 					type: 'subagentToolStart',
@@ -191,6 +207,9 @@ function processProgressRecord(
 				});
 			}
 		}
+		if (hasNonExemptSubTool) {
+			startPermissionTimer(agentId, agents, permissionTimers, PERMISSION_EXEMPT_TOOLS, webview);
+		}
 	} else if (msgType === 'user') {
 		for (const block of content) {
 			if (block.type === 'tool_result' && block.tool_use_id) {
@@ -200,6 +219,10 @@ function processProgressRecord(
 				const subTools = agent.activeSubagentToolIds.get(parentToolId);
 				if (subTools) {
 					subTools.delete(block.tool_use_id);
+				}
+				const subNames = agent.activeSubagentToolNames.get(parentToolId);
+				if (subNames) {
+					subNames.delete(block.tool_use_id);
 				}
 
 				const toolId = block.tool_use_id;
@@ -212,6 +235,21 @@ function processProgressRecord(
 					});
 				}, 300);
 			}
+		}
+		// If there are still active non-exempt sub-agent tools, restart the permission timer
+		// (handles the case where one sub-agent completes but another is still stuck)
+		let stillHasNonExempt = false;
+		for (const [, subNames] of agent.activeSubagentToolNames) {
+			for (const [, toolName] of subNames) {
+				if (!PERMISSION_EXEMPT_TOOLS.has(toolName)) {
+					stillHasNonExempt = true;
+					break;
+				}
+			}
+			if (stillHasNonExempt) break;
+		}
+		if (stillHasNonExempt) {
+			startPermissionTimer(agentId, agents, permissionTimers, PERMISSION_EXEMPT_TOOLS, webview);
 		}
 	}
 }

@@ -97,17 +97,22 @@ export function ToolOverlay({
         const screenY = (deviceOffsetY + (ch.y + sittingOffset - 32) * zoom) / dpr
 
         // Get activity text
+        const subHasPermission = isSub && ch.bubbleType === 'permission'
         let activityText: string
         if (isSub) {
-          const sub = subagentCharacters.find((s) => s.id === id)
-          activityText = sub ? sub.label : 'Subtask'
+          if (subHasPermission) {
+            activityText = 'Needs approval'
+          } else {
+            const sub = subagentCharacters.find((s) => s.id === id)
+            activityText = sub ? sub.label : 'Subtask'
+          }
         } else {
           activityText = getActivityText(id, agentTools, ch.isActive)
         }
 
         // Determine dot color
         const tools = agentTools[id]
-        const hasPermission = tools?.some((t) => t.permissionWait && !t.done)
+        const hasPermission = subHasPermission || tools?.some((t) => t.permissionWait && !t.done)
         const hasActiveTools = tools?.some((t) => !t.done)
         const isActive = ch.isActive
 
