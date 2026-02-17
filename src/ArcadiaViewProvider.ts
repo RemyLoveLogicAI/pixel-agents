@@ -13,7 +13,9 @@ import {
 } from './agentManager.js';
 import { ensureProjectScan } from './fileWatcher.js';
 import { loadFurnitureAssets, sendAssetsToWebview, loadFloorTiles, sendFloorTilesToWebview, loadWallTiles, sendWallTilesToWebview, loadCharacterSprites, sendCharacterSpritesToWebview, loadDefaultLayout } from './assetLoader.js';
-import { WORKSPACE_KEY_AGENT_SEATS, WORKSPACE_KEY_LAYOUT } from './constants.js';
+import { WORKSPACE_KEY_AGENT_SEATS } from './constants.js';
+import { writeLayoutToFile, readLayoutFromFile, watchLayoutFile } from './layoutPersistence.js';
+import type { LayoutWatcher } from './layoutPersistence.js';
 
 export class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 	nextAgentId = { current: 1 };
@@ -35,6 +37,9 @@ export class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 
 	// Bundled default layout (loaded from assets/default-layout.json)
 	defaultLayout: Record<string, unknown> | null = null;
+
+	// Cross-window layout sync
+	layoutWatcher: LayoutWatcher | null = null;
 
 	constructor(private readonly context: vscode.ExtensionContext) {}
 
@@ -79,7 +84,8 @@ export class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 				console.log(`[Arcadia] saveAgentSeats:`, JSON.stringify(message.seats));
 				this.context.workspaceState.update(WORKSPACE_KEY_AGENT_SEATS, message.seats);
 			} else if (message.type === 'saveLayout') {
-				this.context.workspaceState.update(WORKSPACE_KEY_LAYOUT, message.layout);
+				this.layoutWatcher?.markOwnWrite();
+				writeLayoutToFile(message.layout as Record<string, unknown>);
 			} else if (message.type === 'webviewReady') {
 				restoreAgents(
 					this.context,
@@ -125,6 +131,7 @@ export class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 								console.log('[Extension] ⚠️  No assets directory found');
 								if (this.webview) {
 									sendLayout(this.context, this.webview, this.defaultLayout);
+									this.startLayoutWatcher();
 								}
 								return;
 							}
@@ -167,6 +174,7 @@ export class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 						if (this.webview) {
 							console.log('[Extension] Sending saved layout');
 							sendLayout(this.context, this.webview, this.defaultLayout);
+							this.startLayoutWatcher();
 						}
 					})();
 				} else {
@@ -194,6 +202,7 @@ export class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 						} catch { /* ignore */ }
 						if (this.webview) {
 							sendLayout(this.context, this.webview, this.defaultLayout);
+							this.startLayoutWatcher();
 						}
 					})();
 				}
@@ -237,9 +246,9 @@ export class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 
 	/** Export current saved layout to webview-ui/public/assets/default-layout.json (dev utility) */
 	exportDefaultLayout(): void {
-		const layout = this.context.workspaceState.get(WORKSPACE_KEY_LAYOUT, null);
+		const layout = readLayoutFromFile();
 		if (!layout) {
-			vscode.window.showWarningMessage('Arcadia: No saved layout found in workspace state.');
+			vscode.window.showWarningMessage('Arcadia: No saved layout found.');
 			return;
 		}
 		const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
@@ -253,7 +262,17 @@ export class ArcadiaViewProvider implements vscode.WebviewViewProvider {
 		vscode.window.showInformationMessage(`Arcadia: Default layout exported to ${targetPath}`);
 	}
 
+	private startLayoutWatcher(): void {
+		if (this.layoutWatcher) return;
+		this.layoutWatcher = watchLayoutFile((layout) => {
+			console.log('[Arcadia] External layout change — pushing to webview');
+			this.webview?.postMessage({ type: 'layoutLoaded', layout });
+		});
+	}
+
 	dispose() {
+		this.layoutWatcher?.dispose();
+		this.layoutWatcher = null;
 		for (const id of [...this.agents.keys()]) {
 			removeAgent(
 				id, this.agents,

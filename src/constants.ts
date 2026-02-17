@@ -24,6 +24,11 @@ export const CHAR_FRAME_H = 32;
 export const CHAR_FRAMES_PER_ROW = 7;
 export const CHAR_COUNT = 6;
 
+// ── User-Level Layout Persistence ─────────────────────────────
+export const LAYOUT_FILE_DIR = '.arcadia';
+export const LAYOUT_FILE_NAME = 'layout.json';
+export const LAYOUT_FILE_POLL_INTERVAL_MS = 2000;
+
 // ── VS Code Identifiers ─────────────────────────────────────
 export const VIEW_ID = 'arcadia.panelView';
 export const COMMAND_SHOW_PANEL = 'arcadia.showPanel';

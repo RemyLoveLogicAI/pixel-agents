@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { OfficeState } from '../office/engine/officeState.js'
 import type { OfficeLayout, ToolActivity } from '../office/types.js'
 import { extractToolName } from '../office/toolUtils.js'
@@ -57,6 +57,7 @@ function saveAgentSeats(os: OfficeState): void {
 export function useExtensionMessages(
   getOfficeState: () => OfficeState,
   onLayoutLoaded?: (layout: OfficeLayout) => void,
+  isEditDirty?: () => boolean,
 ): ExtensionMessageState {
   const [agents, setAgents] = useState<number[]>([])
   const [selectedAgent, setSelectedAgent] = useState<number | null>(null)
@@ -67,6 +68,9 @@ export function useExtensionMessages(
   const [layoutReady, setLayoutReady] = useState(false)
   const [loadedAssets, setLoadedAssets] = useState<{ catalog: FurnitureAsset[]; sprites: Record<string, string[][]> } | undefined>()
 
+  // Track whether initial layout has been loaded (ref to avoid re-render)
+  const layoutReadyRef = useRef(false)
+
   useEffect(() => {
     // Buffer agents from existingAgents until layout is loaded
     let pendingAgents: Array<{ id: number; palette?: number; hueShift?: number; seatId?: string }> = []
@@ -76,6 +80,11 @@ export function useExtensionMessages(
       const os = getOfficeState()
 
       if (msg.type === 'layoutLoaded') {
+        // Skip external layout updates while editor has unsaved changes
+        if (layoutReadyRef.current && isEditDirty?.()) {
+          console.log('[Webview] Skipping external layout update — editor has unsaved changes')
+          return
+        }
         const rawLayout = msg.layout as OfficeLayout | null
         const layout = rawLayout && rawLayout.version === 1 ? migrateLayoutColors(rawLayout) : null
         if (layout) {
@@ -90,6 +99,7 @@ export function useExtensionMessages(
           os.addAgent(p.id, p.palette, p.hueShift, p.seatId, true)
         }
         pendingAgents = []
+        layoutReadyRef.current = true
         setLayoutReady(true)
         if (os.characters.size > 0) {
           saveAgentSeats(os)

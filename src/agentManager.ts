@@ -5,7 +5,8 @@ import * as vscode from 'vscode';
 import type { AgentState, PersistedAgent } from './types.js';
 import { cancelWaitingTimer, cancelPermissionTimer } from './timerManager.js';
 import { startFileWatching, readNewLines, ensureProjectScan } from './fileWatcher.js';
-import { JSONL_POLL_INTERVAL_MS, TERMINAL_NAME_PREFIX, WORKSPACE_KEY_AGENTS, WORKSPACE_KEY_AGENT_SEATS, WORKSPACE_KEY_LAYOUT } from './constants.js';
+import { JSONL_POLL_INTERVAL_MS, TERMINAL_NAME_PREFIX, WORKSPACE_KEY_AGENTS, WORKSPACE_KEY_AGENT_SEATS } from './constants.js';
+import { migrateAndLoadLayout } from './layoutPersistence.js';
 
 export function getProjectDirPath(cwd?: string): string | null {
 	const workspacePath = cwd || vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
@@ -306,8 +307,7 @@ export function sendLayout(
 	defaultLayout?: Record<string, unknown> | null,
 ): void {
 	if (!webview) return;
-	const saved = context.workspaceState.get(WORKSPACE_KEY_LAYOUT, null);
-	const layout = saved ?? defaultLayout ?? null;
+	const layout = migrateAndLoadLayout(context, defaultLayout);
 	webview.postMessage({
 		type: 'layoutLoaded',
 		layout,
