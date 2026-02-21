@@ -1,5 +1,41 @@
 import type { FloorColor } from './office/types.js'
 
+// ── Ultra PixelHQ Theming & Hierarchy ────────────────────────
+export const P = {
+    bg: "#06090d", bgp: "#0b0f15", bgc: "#0f1520",
+    border: "#162030", hi: "#1e3a50",
+    green: "#00ff88", cyan: "#00d4ff", blue: "#2979ff",
+    mag: "#ff00cc", yel: "#ffd700", org: "#ff6b00",
+    red: "#ff2244", pur: "#9b4dff", whi: "#d8eaf4",
+    dim: "#2a4060", dmt: "#3a6080",
+};
+
+export const HIERARCHY = {
+    boss: { size: 28, crown: true, ring: P.yel, label: "BOSS", mult: 3.0 },
+    supervisor: { size: 22, crown: false, ring: P.pur, label: "SUPERVISOR", mult: 2.0 },
+    employee: { size: 18, crown: false, ring: P.cyan, label: "EMPLOYEE", mult: 1.0 },
+    intern: { size: 13, crown: false, ring: P.dmt, label: "INTERN", mult: 0.5 },
+};
+
+export const TOOL_META = {
+    claude: { color: P.cyan, icon: "◈", label: "CLAUDE" },
+    cursor: { color: P.org, icon: "▷", label: "CURSOR" },
+    codex: { color: P.blue, icon: "▶", label: "CODEX" },
+    octocode: { color: P.pur, icon: "⊚", label: "OCTOCODE" },
+    replit: { color: P.mag, icon: "⟳", label: "REPLIT" },
+};
+
+export const GAME_MODS = [
+    { id: "turbo", name: "TURBO MODE", desc: "2× agent tick speed", cost: 500, color: P.yel },
+    { id: "godmode", name: "GOD MODE", desc: "Infinite tokens, no limits", cost: 2000, color: P.pur },
+    { id: "swarm", name: "SWARM PROTOCOL", desc: "Auto-spawn intern on task", cost: 1000, color: P.mag },
+    { id: "timewarp", name: "TIME WARP", desc: "Replay last session 4×", cost: 3000, color: P.org },
+    { id: "stealth", name: "STEALTH OPS", desc: "Zero-trace private mode", cost: 750, color: P.green },
+    { id: "debug_ovl", name: "DEBUG OVERLAY", desc: "Show all token counts", cost: 0, color: P.cyan },
+    { id: "nightmode", name: "NIGHT MODE", desc: "Office goes dark + lamps", cost: 0, color: P.dmt },
+    { id: "fire_drill", name: "FIRE DRILL", desc: "Chaos test: random errors", cost: 100, color: P.red },
+];
+
 // ── Grid & Layout ────────────────────────────────────────────
 export const TILE_SIZE = 16
 export const DEFAULT_COLS = 20

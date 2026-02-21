@@ -63,3 +63,11 @@ html, body, #root {
 * {
   font-family: 'FS Pixel Sans', sans-serif;
 }
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes toastIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes glow { 0%, 100% { box-shadow: 0 0 8px rgba(90, 200, 140, 0.44); } 50% { box-shadow: 0 0 20px rgba(90, 200, 140, 0.88); } }
+
