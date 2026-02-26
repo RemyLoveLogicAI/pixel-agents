@@ -1,0 +1,84 @@
+<details>
+<summary>Documentation Metadata (click to expand)</summary>
+
+```json
+{
+  "doc_type": "file_overview",
+  "file_path": "webview-ui/src/components/Scanlines.tsx",
+  "source_hash": "8a1e08f478325799d177026888ef493e46933f84365595a7a7a167c53980ff1a",
+  "last_updated": "2026-02-26T19:06:40.338336+00:00",
+  "tokens_used": 5306,
+  "complexity_score": 1,
+  "estimated_review_time_minutes": 5,
+  "external_dependencies": []
+}
+```
+
+</details>
+
+[Documentation Home](../../../README.md) > [webview-ui](../../README.md) > [src](../README.md) > [components](./README.md) > **Scanlines.mdx**
+
+---
+
+# Scanlines.tsx
+
+> **File:** `webview-ui/src/components/Scanlines.tsx`
+
+![Complexity: Low](https://img.shields.io/badge/Complexity-Low-green) ![Review Time: 5min](https://img.shields.io/badge/Review_Time-5min-blue)
+
+## 📑 Table of Contents
+
+
+- [Overview](#overview)
+- [Dependencies](#dependencies)
+- [Architecture Notes](#architecture-notes)
+- [Usage Examples](#usage-examples)
+- [Maintenance Notes](#maintenance-notes)
+- [Functions and Classes](#functions-and-classes)
+
+---
+
+## Overview
+
+This file exports a single named React functional component: export function Scanlines() { ... }. The component returns a single empty <div /> with an inline style object that places it absolutely over its containing block (position: 'absolute', inset: 0) and paints a repeating-linear-gradient background that produces horizontal scanlines (transparent for 0–3px, rgba(0,0,0,0.04) at 3–4px). The element is non-interactive (pointerEvents: 'none') and uses a very high z-index (9999) so it appears above most other UI elements.
+
+The component is intentionally minimal: it has no props, no internal state, no side effects, and no external dependencies or imports. It is purely presentational and suitable to be mounted near the root of the UI (for example inside an app-level overlay container) to provide a subtle CRT/scanline visual effect across the entire viewport. Important implementation details developers should note: inline styles recreate the style object on each render, pointer-events are disabled to avoid blocking input, and the background uses CSS only (no images or external assets).
+
+## Dependencies
+
+No dependencies identified.
+
+## 📁 Directory
+
+This file is part of the **components** directory. View the [directory index](_docs/webview-ui/src/components/README.md) to see all files in this module.
+
+## Architecture Notes
+
+- Pattern: Stateless presentational React functional component (named export).
+- Uses inline style object to apply layout and visual CSS directly on the returned <div />; no CSS modules or classNames are used.
+- Rendering effect: absolute positioning with inset: 0 makes the element cover its nearest positioned ancestor. For full-viewport coverage ensure a positioned ancestor such as body or an app container creates the expected stacking context.
+- Interaction: pointerEvents set to 'none' ensures this overlay does not intercept pointer events; no event handling or lifecycle logic is present.
+
+## Usage Examples
+
+### Add subtle scanline overlay across the app UI
+
+Import the named component and render it once near the top level of the application so it overlays the UI: import { Scanlines } from './components/Scanlines'; then include <Scanlines /> inside your app root or overlay container. Because the element is positioned absolute with inset: 0, ensure the container you render it into creates the intended stacking context (e.g., a root div that fills the viewport). The overlay will be non-interactive (pointerEvents: 'none') and will not block clicks or keyboard interactions with UI beneath it.
+
+## Maintenance Notes
+
+- Performance: The inline style object is recreated on every render. While the component is cheap, wrapping it in React.memo or hoisting the style object to a module-level constant will avoid unnecessary allocations.
+- Testing: Visual snapshot tests (e.g., Jest + react-test-renderer or Playwright screenshots) are recommended to catch regressions in the gradient or z-index.
+- Accessibility: The element is non-interactive and contains no semantic content; pointerEvents: 'none' prevents it from interfering with assistive technology interactions, but confirm overlay stacking does not hide or obstruct focusable elements visually.
+- Extensibility: If different densities, colors, or z-index values are required, consider adding typed props (e.g., color, spacingPx, opacity, zIndex) rather than copying/modifying the component each time.
+- Potential gotcha: Because zIndex is very high (9999), other components that rely on their own high z-index (modals, tooltip libraries) might be placed behind this overlay unless their z-index is adjusted or the overlay is rendered conditionally.
+
+---
+
+## Navigation
+
+**↑ Parent Directory:** [Go up](_docs/webview-ui/src/components/README.md)
+
+---
+
+*This documentation was automatically generated by AI ([Woden DocBot](https://github.com/marketplace/ai-document-creator)) and may contain errors. It is the responsibility of the user to validate the accuracy and completeness of this documentation.*
