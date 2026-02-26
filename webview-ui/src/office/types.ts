@@ -146,6 +146,15 @@ export interface Character {
   id: number
   state: CharacterState
   dir: Direction
+  /** Agent role rank */
+  tier: 'boss' | 'supervisor' | 'employee' | 'intern'
+  /** RPG Stats */
+  hp: number
+  xp: number
+  maxXp: number
+  level: number
+  tokens: number
+  tasks: number
   /** Pixel position */
   x: number
   y: number

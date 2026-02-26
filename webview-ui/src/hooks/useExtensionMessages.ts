@@ -9,6 +9,7 @@ import { setWallSprites } from '../office/wallTiles.js'
 import { setCharacterTemplates } from '../office/sprites/spriteData.js'
 import { vscode } from '../vscodeApi.js'
 import { playDoneSound, setSoundEnabled } from '../notificationSound.js'
+import { TierLevel } from '../omega/types.js'
 
 export interface SubagentCharacter {
   id: number
@@ -46,6 +47,42 @@ export interface ExtensionMessageState {
   loadedAssets?: { catalog: FurnitureAsset[]; sprites: Record<string, string[][]> }
 }
 
+// Omega v2 callbacks for agent lifecycle events
+export interface OmegaCallbacks {
+  registerAgent: (id: number, tier: TierLevel, name: string, parentId?: number) => void
+  unregisterAgent: (id: number) => void
+}
+
+// Pick a diverse tier for new agents (first is BOSS, then distribute evenly)
+function pickTier(existingAgents: number[], os: OfficeState): TierLevel {
+  // First agent is always BOSS
+  if (existingAgents.length === 0) return TierLevel.BOSS
+
+  // Count existing agent tiers
+  const tierCounts: Record<TierLevel, number> = {
+    [TierLevel.BOSS]: 0,
+    [TierLevel.SUPERVISOR]: 0,
+    [TierLevel.EMPLOYEE]: 0,
+    [TierLevel.INTERN]: 0,
+  }
+
+  for (const id of existingAgents) {
+    const ch = os.characters.get(id)
+    if (ch && !ch.isSubagent) {
+      // Default to EMPLOYEE if tier not yet assigned
+      const tier = (ch as { tier?: TierLevel }).tier ?? TierLevel.EMPLOYEE
+      tierCounts[tier]++
+    }
+  }
+
+  // Pick least-used tier (weighted toward EMPLOYEE/INTERN)
+  // Target distribution: 1 BOSS, 2-3 SUPERVISORs, more EMPLOYEEs/INTERNs
+  if (tierCounts[TierLevel.BOSS] === 0) return TierLevel.BOSS
+  if (tierCounts[TierLevel.SUPERVISOR] < 2) return TierLevel.SUPERVISOR
+  if (tierCounts[TierLevel.EMPLOYEE] <= tierCounts[TierLevel.INTERN]) return TierLevel.EMPLOYEE
+  return TierLevel.INTERN
+}
+
 function saveAgentSeats(os: OfficeState): void {
   const seats: Record<number, { palette: number; hueShift: number; seatId: string | null }> = {}
   for (const ch of os.characters.values()) {
@@ -59,6 +96,7 @@ export function useExtensionMessages(
   getOfficeState: () => OfficeState,
   onLayoutLoaded?: (layout: OfficeLayout) => void,
   isEditDirty?: () => boolean,
+  omega?: OmegaCallbacks,
 ): ExtensionMessageState {
   const [agents, setAgents] = useState<number[]>([])
   const [selectedAgent, setSelectedAgent] = useState<number | null>(null)
@@ -110,6 +148,11 @@ export function useExtensionMessages(
         setAgents((prev) => (prev.includes(id) ? prev : [...prev, id]))
         setSelectedAgent(id)
         os.addAgent(id)
+        // Register with omega hierarchy
+        if (omega) {
+          const tier = pickTier(agents, os)
+          omega.registerAgent(id, tier, `Agent ${id}`)
+        }
         saveAgentSeats(os)
       } else if (msg.type === 'agentClosed') {
         const id = msg.id as number
@@ -137,6 +180,8 @@ export function useExtensionMessages(
         os.removeAllSubagents(id)
         setSubagentCharacters((prev) => prev.filter((s) => s.parentAgentId !== id))
         os.removeAgent(id)
+        // Unregister from omega hierarchy
+        omega?.unregisterAgent(id)
       } else if (msg.type === 'existingAgents') {
         const incoming = msg.agents as number[]
         const meta = (msg.agentMeta || {}) as Record<number, { palette?: number; hueShift?: number; seatId?: string }>
@@ -176,6 +221,8 @@ export function useExtensionMessages(
             if (prev.some((s) => s.id === subId)) return prev
             return [...prev, { id: subId, parentAgentId: id, parentToolId: toolId, label }]
           })
+          // Register subagent in omega hierarchy (always INTERN tier, parented to main agent)
+          omega?.registerAgent(subId, TierLevel.INTERN, label, id)
         }
       } else if (msg.type === 'agentToolDone') {
         const id = msg.id as number
@@ -315,6 +362,11 @@ export function useExtensionMessages(
         // Remove sub-agent character
         os.removeSubagent(id, parentToolId)
         setSubagentCharacters((prev) => prev.filter((s) => !(s.parentAgentId === id && s.parentToolId === parentToolId)))
+        // Unregister subagent from omega hierarchy
+        const clearedSubId = os.getSubagentId(id, parentToolId)
+        if (clearedSubId !== null) {
+          omega?.unregisterAgent(clearedSubId)
+        }
       } else if (msg.type === 'characterSpritesLoaded') {
         const characters = msg.characters as Array<{ down: string[][][]; up: string[][][]; right: string[][][] }>
         console.log(`[Webview] Received ${characters.length} pre-colored character sprites`)
@@ -346,7 +398,7 @@ export function useExtensionMessages(
     window.addEventListener('message', handler)
     vscode.postMessage({ type: 'webviewReady' })
     return () => window.removeEventListener('message', handler)
-  }, [getOfficeState])
+  }, [getOfficeState, omega, agents])
 
   return { agents, selectedAgent, agentTools, agentStatuses, subagentTools, subagentCharacters, layoutReady, loadedAssets }
 }

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <mxfile host="codeviz.app" modified="2026-02-25T09:38:21.119Z" agent="CodeViz Exporter" version="14.6.5" type="device">
+          <diagram id="codeviz-diagram" name="System Diagram">
+            <mxGraphModel dx="1000" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+              <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="base.cv::webview_ui_container" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="base.cv::pixel_agents_extension_boundary">
+                  <mxGeometry x="64" y="479" width="294" height="212" as="geometry"/>
+                </mxCell>
+                <mxCell id="base.cv::webview_ui_container_label" value="**Webview UI (React App)**" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="base.cv::pixel_agents_extension_boundary">
+                  <mxGeometry x="72" y="487" width="218" height="24" as="geometry"/>
+                </mxCell>
+<mxCell id="base.cv::pixel_agents_extension_boundary" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="__uml__base.cv">
+                  <mxGeometry x="56" y="150" width="969" height="837" as="geometry"/>
+                </mxCell>
+                <mxCell id="base.cv::pixel_agents_extension_boundary_label" value="**Pixel Agents VS Code Extension**" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="__uml__base.cv">
+                  <mxGeometry x="64" y="158" width="893" height="24" as="geometry"/>
+                </mxCell>
+<mxCell id="__uml__base.cv" value="" style="html=1;whiteSpace=wrap;container=1;fillColor=#dae8fc;strokeColor=#6c8ebf;dashed=1;fillOpacity=20;strokeWidth=2;containerType=none;recursiveResize=0;movable=1;resizable=1;autosize=0;dropTarget=0" vertex="1" parent="1">
+                  <mxGeometry x="12" y="12" width="1152" height="1371" as="geometry"/>
+                </mxCell>
+                <mxCell id="__uml__base.cv_label" value="base.cv" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;labelBackgroundColor=white;spacing=5" vertex="1" parent="1">
+                  <mxGeometry x="20" y="20" width="1076" height="24" as="geometry"/>
+                </mxCell>
+                <mxCell id="base.cv::developer" value="**Developer**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="__uml__base.cv">
+                      <mxGeometry x="557" y="60" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::vscode" value="**VS Code**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="__uml__base.cv">
+                      <mxGeometry x="1141" y="1695" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::claude_code_cli" value="**Claude Code CLI**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="__uml__base.cv">
+                      <mxGeometry x="405.1875" y="1578" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::anthropic_ai" value="**Anthropic AI**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="__uml__base.cv">
+                      <mxGeometry x="425.6875" y="1812" width="256" height="73" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::extension_main" value="**Main Extension Logic**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::pixel_agents_extension_boundary">
+                      <mxGeometry x="513" y="110" width="297" height="121" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::file_watcher" value="**File Watcher**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::pixel_agents_extension_boundary">
+                      <mxGeometry x="956.125" y="122" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::transcript_parser" value="**Transcript Parser**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::pixel_agents_extension_boundary">
+                      <mxGeometry x="876.875" y="368" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::agent_manager" value="**Agent Manager**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::pixel_agents_extension_boundary">
+                      <mxGeometry x="876.875" y="505" width="297" height="121" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::layout_persistence" value="**Layout Persistence**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::pixel_agents_extension_boundary">
+                      <mxGeometry x="558.875" y="368" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::asset_loader" value="**Asset Loader**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::pixel_agents_extension_boundary">
+                      <mxGeometry x="240.875" y="251" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::webview_app_main" value="**Webview Main Application**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::webview_ui_container">
+                      <mxGeometry x="337" y="247" width="297" height="121" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::vscode_api_bridge" value="**VS Code API Bridge**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::webview_ui_container">
+                      <mxGeometry x="652.5" y="110" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::office_engine" value="**Office Engine**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::webview_ui_container">
+                      <mxGeometry x="337" y="408" width="297" height="121" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::office_editor" value="**Office Editor**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::webview_ui_container">
+                      <mxGeometry x="654" y="420" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::layout_manager" value="**Layout Manager**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::webview_ui_container">
+                      <mxGeometry x="733.25" y="569" width="297" height="121" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::sprite_manager" value="**Sprite Manager**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::webview_ui_container">
+                      <mxGeometry x="337" y="581" width="297" height="97" as="geometry"/>
+                    </mxCell>
+<mxCell id="base.cv::ui_components" value="**UI Components**" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5" vertex="1" parent="base.cv::webview_ui_container">
+                      <mxGeometry x="20" y="420" width="297" height="97" as="geometry"/>
+                    </mxCell>
+                <mxCell id="edge-base.cv::e1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::developer" target="base.cv::vscode">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e1_label" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e1">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::developer" target="base.cv::extension_main">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e2_label" value="Interacts with" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e2">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::developer" target="base.cv::claude_code_cli">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e3_label" value="Interacts with" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e3">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::pixel_agents_extension_boundary" target="base.cv::vscode">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e4_label" value="Runs within" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e4">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::file_watcher" target="base.cv::claude_code_cli">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e5_label" value="Monitors" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e5">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::file_watcher" target="base.cv::transcript_parser">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e6_label" value="Feeds data to" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e6">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::transcript_parser" target="base.cv::agent_manager">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e7_label" value="Updates agent state in" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e7">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::agent_manager" target="base.cv::vscode_api_bridge">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e8_label" value="Sends agent state updates to" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e8">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e9" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::vscode_api_bridge" target="base.cv::webview_app_main">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e9_label" value="Receives agent state updates from" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e9">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::extension_main" target="base.cv::vscode_api_bridge">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e10_label" value="Manages" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e10">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e11" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::extension_main" target="base.cv::webview_app_main">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e11_label" value="Initializes and manages" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e11">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::asset_loader" target="base.cv::webview_app_main">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e12_label" value="Provides assets to" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e12">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e13" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::layout_persistence" target="base.cv::vscode_api_bridge">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e13_label" value="Sends layout data to" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e13">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e14" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::vscode_api_bridge" target="base.cv::layout_manager">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e14_label" value="Provides layout data to" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e14">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::office_editor" target="base.cv::layout_manager">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e15_label" value="Modifies layout via" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e15">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e16" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::webview_app_main" target="base.cv::office_engine">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e16_label" value="Displays content from" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e16">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::office_engine" target="base.cv::sprite_manager">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e17_label" value="Requests sprites from" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e17">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e18" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::webview_app_main" target="base.cv::office_editor">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e18_label" value="Contains" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e18">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e19" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::webview_app_main" target="base.cv::ui_components">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e19_label" value="Uses" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e19">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+<mxCell id="edge-base.cv::e20" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#808080;strokeWidth=2;jumpStyle=arc;jumpSize=10;spacing=15;labelBackgroundColor=white;labelBorderColor=none" edge="1" parent="1" source="base.cv::claude_code_cli" target="base.cv::anthropic_ai">
+                    <mxGeometry relative="1" as="geometry"/>
+                  </mxCell>
+                  <mxCell id="edge-base.cv::e20_label" value="Communicates with" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="edge-base.cv::e20">
+                    <mxGeometry x="-0.2" y="10" relative="1" as="geometry">
+                      <mxPoint as="offset"/>
+                    </mxGeometry>
+                  </mxCell>
+              </root>
+            </mxGraphModel>
+          </diagram>
+        </mxfile>
