@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { OfficeState } from './office/engine/officeState.js'
 import { OfficeCanvas } from './office/components/OfficeCanvas.js'
 import { ToolOverlay } from './office/components/ToolOverlay.js'
@@ -15,6 +15,15 @@ import { ZoomControls } from './components/ZoomControls.js'
 import { BottomToolbar } from './components/BottomToolbar.js'
 import { DebugView } from './components/DebugView.js'
 import { Scanlines } from './components/Scanlines.js'
+// Omega v2 systems
+import { useOmegaSystems } from './omega/hooks/useOmegaSystems.js'
+import { ViewMode } from './omega/types.js'
+import { GameHUD } from './omega/components/GameHUD.js'
+import { SkillBar } from './omega/components/SkillBar.js'
+import { ViewModeSwitch } from './omega/components/ViewModeSwitch.js'
+import { DelegationCanvas } from './omega/components/DelegationCanvas.js'
+import { OrgChartView } from './omega/components/OrgChartView.js'
+import { HeatmapOverlay } from './omega/components/HeatmapOverlay.js'
 
 // Game state lives outside React — updated imperatively by message handlers
 const officeStateRef = { current: null as OfficeState | null }
@@ -122,7 +131,42 @@ function App() {
 
   const isEditDirty = useCallback(() => editor.isEditMode && editor.isDirty, [editor.isEditMode, editor.isDirty])
 
-  const { agents, selectedAgent, agentTools, agentStatuses, subagentTools, subagentCharacters, layoutReady, loadedAssets } = useExtensionMessages(getOfficeState, editor.setLastSavedLayout, isEditDirty)
+  // Omega v2 systems — manages hierarchy, gamification, mods, particles
+  const omega = useOmegaSystems(getOfficeState)
+
+  const { agents, selectedAgent, agentTools, agentStatuses, subagentTools, subagentCharacters, layoutReady, loadedAssets } = useExtensionMessages(
+    getOfficeState,
+    editor.setLastSavedLayout,
+    isEditDirty,
+    { registerAgent: omega.registerAgent, unregisterAgent: omega.unregisterAgent },
+  )
+
+  // Cheat code keyboard listener (only active when not in edit mode)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!editor.isEditMode && e.key.length === 1) {
+        omega.processCheatKey(e.key)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [editor.isEditMode, omega.processCheatKey])
+
+  // Update omega systems each frame via game loop callback
+  useEffect(() => {
+    let lastTime = performance.now()
+    let running = true
+    const tick = () => {
+      if (!running) return
+      const now = performance.now()
+      const dt = (now - lastTime) / 1000
+      lastTime = now
+      omega.updateSystems(dt)
+      requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+    return () => { running = false }
+  }, [omega.updateSystems])
 
   const [isDebugMode, setIsDebugMode] = useState(false)
 
@@ -213,6 +257,59 @@ function App() {
       />
 
       <ZoomControls zoom={editor.zoom} onZoomChange={editor.handleZoomChange} />
+
+      {/* Omega v2: Delegation particle trails */}
+      <DelegationCanvas
+        particles={omega.particles}
+        offsetX={editor.panRef.current.x}
+        offsetY={editor.panRef.current.y}
+        zoom={editor.zoom}
+      />
+
+      {/* Omega v2: Heatmap overlay (only in heatmap view mode) */}
+      {omega.state.viewMode === ViewMode.HEATMAP && (
+        <HeatmapOverlay
+          agents={omega.state.agents}
+          cols={officeState.getLayout().cols}
+          rows={officeState.getLayout().rows}
+          offsetX={editor.panRef.current.x}
+          offsetY={editor.panRef.current.y}
+          zoom={editor.zoom}
+          agentPositions={(() => {
+            const map = new Map<number, { x: number; y: number }>()
+            for (const ch of officeState.characters.values()) {
+              map.set(ch.id, { x: ch.x, y: ch.y })
+            }
+            return map
+          })()}
+        />
+      )}
+
+      {/* Omega v2: Org Chart overlay (only in org chart view mode) */}
+      {omega.state.viewMode === ViewMode.ORG_CHART && (
+        <OrgChartView
+          agents={omega.state.agents}
+          selectedAgentId={selectedAgent}
+          onSelectAgent={handleSelectAgent}
+        />
+      )}
+
+      {/* Omega v2: Game HUD (always visible) */}
+      <GameHUD state={omega.state} />
+
+      {/* Omega v2: View Mode Switch */}
+      <ViewModeSwitch
+        viewMode={omega.state.viewMode}
+        onChangeViewMode={omega.setViewMode}
+      />
+
+      {/* Omega v2: Skill Bar (when agent selected) */}
+      {selectedAgent !== null && (
+        <SkillBar
+          selectedAgentId={selectedAgent}
+          onDispatchSkill={omega.dispatchSkill}
+        />
+      )}
 
       {/* Vignette overlay */}
       <div

@@ -1,6 +1,5 @@
-import React from 'react'
 import { OfficeState } from '../office/engine/officeState.js'
-import { Character } from '../office/types.js'
+import type { Character } from '../office/types.js'
 import { HIERARCHY, P } from '../constants.js'
 import { extractToolName } from '../office/toolUtils.js'
 
@@ -11,7 +10,7 @@ interface Props {
     tick: number // used to force re-renders periodically
 }
 
-export function AgentHierarchy({ officeState, selectedAgent, onSelectAgent, tick }: Props) {
+export function AgentHierarchy({ officeState, selectedAgent, onSelectAgent, tick: _tick }: Props) {
     const characters = Array.from(officeState.characters.values())
 
     const tiers = ['boss', 'supervisor', 'employee', 'intern'] as const
@@ -48,6 +47,8 @@ export function AgentHierarchy({ officeState, selectedAgent, onSelectAgent, tick
                             const active = a.isActive
                             const displayName = a.isSubagent ? `INT-${Math.abs(a.id)}` : `AGENT-${a.id}`
                             const isSelected = selectedAgent === a.id
+                            const toolIcon = a.currentTool ? (extractToolName(a.currentTool) ?? '◈').substring(0, 1) : '◈'
+                            const toolLabel = a.currentTool ? (extractToolName(a.currentTool) ?? 'tool') : (active ? 'thinking' : 'idle')
 
                             return (
                                 <div key={a.id} onClick={() => onSelectAgent(a.id)} style={{
@@ -64,7 +65,7 @@ export function AgentHierarchy({ officeState, selectedAgent, onSelectAgent, tick
                                         borderRadius: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         fontSize: Math.max(8, tierInfo.size * 0.38), color: P.cyan, flexShrink: 0,
                                     }}>
-                                        {a.currentTool ? extractToolName(a.currentTool).substring(0, 1) : '◈'}
+                                        {toolIcon}
                                     </div>
                                     <div style={{ minWidth: 0, flex: 1 }}>
                                         <div style={{
@@ -79,7 +80,7 @@ export function AgentHierarchy({ officeState, selectedAgent, onSelectAgent, tick
                                                 animation: active ? 'pixel-agents-pulse 2s infinite' : 'none',
                                             }}>●</span>
                                             <span style={{ fontSize: '10px', color: P.dmt, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 80 }}>
-                                                {a.currentTool ? extractToolName(a.currentTool) : (active ? 'thinking' : 'idle')}
+                                                {toolLabel}
                                             </span>
                                         </div>
                                         <div style={{ marginTop: 2, height: 4, background: `${P.cyan}22`, border: `1px solid ${P.cyan}33`, borderRadius: 1, overflow: 'hidden' }}>
